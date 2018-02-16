@@ -1,0 +1,12 @@
+*.test
+*.tmp
+*.sass-cache
+node_modules
+dist*
+npm-debug*
+yarn.lock
+coverage
+.idea
+.project
+.settings
+*.DS_Store

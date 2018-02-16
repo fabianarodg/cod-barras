@@ -1,0 +1,23 @@
+{
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules":true,
+      "arrowFunctions":true,
+      "classes":true,
+      "spread":true
+    }
+ },
+  "extends": ["airbnb"],
+  "rules": {
+    "strict": 0,
+    "radix": 0,
+    "ignoreStrings": true,
+    "no-underscore-dangle": [2, { "allow": ["__INITIAL_STATE__"] }]
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "parser": "babel-eslint"
+}

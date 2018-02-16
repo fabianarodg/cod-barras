@@ -1,0 +1,560 @@
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import styled, { css } from 'styled-components'
+import { prop, ifProp, switchProp } from 'styled-tools'
+
+import Grid from '../../atoms/Grid'
+import Icon from '../../atoms/Icon'
+import List from '../../atoms/List'
+import Text from '../../atoms/Text'
+import Title from '../../atoms/Title'
+import Button from '../../atoms/Button'
+import Alert from '../../molecules/Alert'
+import Img from '../../atoms/Img'
+import Form, {FormRadio, FormCheck, FormInput, FormSelect} from '../../molecules/Form'
+
+import * as m from './../../styles/mixins'
+
+const StyledUl = styled.ul `
+  padding:0;
+`
+const StyledLiContas = styled.li`
+  list-style:none;
+  border-bottom: 1px solid #4a4a4a;
+
+  &.blocked {
+	  border-left: 4px solid #D82482;
+	  border-radius: 2px;
+  }
+  & .row {
+	padding: 30px 10px;
+
+  }
+  & .selected {
+	background: #ffd900;
+	}
+  & .div-flex {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap:wrap;
+  }
+  & .span-column {
+    display: flex;
+    flex-flow:column;
+    margin-left:40px;
+  }
+  & .align-center {
+    text-align: center;
+    }
+  & .content-codbarras {
+    display: flex;
+    flex-flow:column;
+    align-items: center;
+      & img {
+        width: 100%;
+        margin: 0;
+      }
+    }
+  & a.link-lista {
+    font-weight: bold;
+    align-self:flex-end;
+  }
+`
+
+const StyledPrint = styled(Grid)`
+	width: 100%;
+  visibility: hidden;
+	position: absolute;
+ 	& * {
+    visibility: hidden;
+  }
+	& .content-flex-print {
+		display: flex;
+    padding: 0 0 20px 0;
+		& .title-print {
+			margin-left: 10px;
+		}
+	}
+  & .info-print {
+    border-bottom: 1px solid grey;
+    padding: 20px 0;
+    display: flex;
+    flex-flow: column;
+    & .info-print-detail {
+      margin: 0 0 0 10px;
+      font-weight: bold;
+    }
+    & .info-print-detail-second {
+      margin-top: 10px;
+    }
+  }
+  & .info-print-second {
+    border-bottom: 1px solid grey;
+    padding: 20px 0 0 0;
+    display: flex;
+    flex-flow: column;
+    & .info-print-detail-second {
+      margin: 10px 0 30px 0;
+      & p:first-child{
+        margin-bottom: 50px;
+      }
+    }
+  }
+`
+const StyledTextPrint = styled(Grid)`
+	border-top: 1px solid grey;
+	border-bottom: 1px solid grey;
+	padding: 20px 0;
+	display: flex;
+	align-items: center;
+	& .phone-print {
+		margin: 0 0 0 20px;
+	}
+
+`
+
+
+
+class ListaConta extends Component {
+
+    constructor(props) {
+      super(props);
+      this.handleClick = this.handleClick.bind(this)
+      this.isActive = this.isActive.bind(this)
+      this.state = {
+        active: null,
+        selected: [],
+    		placeholderModal: 'Enviar E-mail',
+    		checkedDefault: 'email',
+        checked: this.props.allChecked,
+        codCopy: '',
+				copied: false
+      }
+
+	}
+	markRow(i) {
+		let listColor = this.state.selected
+		if(listColor.indexOf(i) > -1)
+		{
+			let index = listColor.indexOf(i)
+			listColor.splice(index, 1)
+		}
+
+		else {
+			listColor.push(i)
+		}
+
+		this.setState({selected: listColor})
+  }
+  
+    handleCopy (e, code){
+      e.preventDefault();
+      
+      console.log(code)
+    }
+
+    handleClick(i){
+  		return (e) => {
+			  let active = this.state.active === i ? null : i
+			  console.log(this.state.active)
+  			this.setState({active: active})
+  		}
+    }
+    isActive(i){
+      return this.state.active === i ? true : false
+    }
+
+    selectItems(index) {
+			this.markRow(index)
+	}
+	
+
+    showMsgByDate(date) {
+			let status = {qtd: 0, msg: ''}
+			if (m.dateDiff(date) == 0) {
+				status = {msg: 'Vencendo', qtd: 'hoje' }
+			}
+			else if (m.dateDiff(date) > 0) {
+				status = {msg: 'A vencer', qtd: 'em '+m.dateDiff(date)+' dia' }
+				if (m.dateDiff(date) > 1)
+				status.qtd += 's'
+			}
+			else {
+				let qtdias = m.dateDiff(date) * -1
+				status = {msg: 'Vencida', qtd: 'há '+qtdias+' dias' }
+			}
+			return status
+    }
+
+    renderList(list) {
+		return list.map((item, index) => {
+		let status = this.showMsgByDate(item.date)
+		let isColored = this.state.selected.indexOf(index) > -1 ? 'colored' : ''
+		let isChecked = this.state.selected.indexOf(index) > -1 ? true : false
+			return(
+				<StyledLiContas key={index} className={item.block ? 'blocked' : ''}>
+					<div className={isColored}>
+				  		<Grid className='row' centerItems>
+							<Grid className='col-md-5'>
+								<span>
+									
+									<FormCheck
+										value={item.barCode}
+										className='ck-conta'
+										onChange={this.selectItems(index)}
+										margin={0} />
+
+									<span className="span-column">
+										<Text type="span">R$ {item.valor}</Text>
+										<Text type="span">Vencimento em {m.formatDate('DMY', item.date)}</Text>
+									</span>
+								</span>
+							</Grid>
+							<Grid className='col-md-5'>
+								<Text type="p" margin={0}>{status.msg}</Text>
+								<Text type="p" margin={0}>{status.qtd}</Text>
+							</Grid>
+							<Grid className='col-md-2'>
+								<Button styleButton="linkface" onClick={this.handleClick(index)}>
+									{this.state.active == index ? 'Esconder' : 'Mostrar'} Código
+								</Button>
+							</Grid>
+			  			</Grid>
+			  		</div>
+			  		
+					<div style={{display: this.isActive(index) ? 'block' : 'none'}} className="align-center">
+						<Grid className="content-codbarras">
+							<Img src={item.src}/>
+							<Button styleButton='linkface' className="link-lista">Copiar Código de Barras</Button>
+						</Grid>
+						<Text type="span">Esse é o código de barras para pagamento no seu banco
+						ou casas lotéricas, caso queira a conta detalhada acesse a Minha Oi.
+						</Text>
+			  		</div>
+				</StyledLiContas>
+			)
+		})
+    }
+
+ 
+    render() {
+		let p = this.props
+		let firstNumber = p.firstNumber
+
+      return (
+        <Grid className='container-fluid' >
+          <Grid className='container'>
+            <Grid className='row' centerItems>
+              <Grid className='col-md-12'>
+                <Text type="span"> Nº do Produto </Text>
+                <Title fontSize={3}>{m.hidePhone(p.numTel)}</Title>
+                <Alert
+                	status='info'
+					title='Atenção: Produto com conta em débito automático'
+					className="margin-alert"
+                	margin={[18, 0,0,0]}>
+						A conta a vencer terá o pagamento realizado automaticamente em sua conta corrente
+						na data do vencimento. Caso tenha algum dúvida entre em contato com seu banco.
+                </Alert>
+                <StyledUl>
+                  {this.renderList(p.firstNumber)}
+                </StyledUl>
+              </Grid>
+            </Grid>
+          </Grid>
+
+					<StyledPrint id="section-to-print">
+					<Grid className="content-flex-print">
+					<Icon type="oi" size={3}/>
+					<Title className="title-print">Código de Barras</Title>
+					</Grid>
+					<StyledTextPrint>
+						<Text type="span">Informações de pagamento para o número: </Text>
+						<Title fontSize={3} className="phone-print">{m.hidePhone("(21) 99967-0014")}</Title>
+					</StyledTextPrint>
+					<Grid className="info-print">
+						<Text type="p">Data de Vencimento:
+							<Text type="span" className="info-print-detail">
+								{m.formatDate('DMY', "11/01/2018")}
+							</Text>
+						</Text>
+						<Text type="p">Valor:
+							<Text type="span" className="info-print-detail">
+								{m.formatDate('DMY', "11/01/2018")}
+							</Text>
+						</Text>
+					</Grid>
+					<Grid className="info-print-second">
+						<Text type="p">Débito Automático:</Text>
+						<Text type="span" className="info-print-detail-second">Lorem ipsum dolor sit amet, consectetur
+							adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+							Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</Text>
+						<Text type="p">Aproveite e ative sua Conta Online</Text>
+						<Text type="span" className="info-print-detail-second">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+							ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+							laboris nisi ut aliquip ex ea commodo consequat.
+						</Text>
+					</Grid>
+				</StyledPrint>
+
+        </Grid>
+      )
+    }
+}
+export { ListaConta }
+export default ListaConta
+===================================================
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import styled, { css,extend } from 'styled-components'
+import { prop, ifProp, switchProp } from 'styled-tools'
+import ReCAPTCHA from 'react-google-recaptcha'
+
+import Grid from '../../atoms/Grid'
+import List from '../../atoms/List'
+import Text from '../../atoms/Text'
+import Title from '../../atoms/Title'
+import Icon from '../../atoms/Icon'
+
+import Popover, {PopContent} from '../../molecules/Popover'
+import Button from '../../atoms/Button'
+import Modal from '../../molecules/Modal'
+import ButtonLoader from '../../molecules/ButtonLoader'
+import Form, {FormRadio, FormCheck, FormInput, FormSelect} from '../../molecules/Form'
+
+const StyledInfo = styled(Grid) `
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 15px 10px;
+	margin: 30px 0 50px 0;
+`
+const StyledList = styled.div `
+	margin-top:20px;
+	list-style: none;
+	& div {
+    padding: 0;
+    & label {
+      padding: 0;
+
+    }
+    & label:nth-child(2) {
+      margin-left: 30px;
+    }
+		& span {
+			margin: 12px 0 0 25px;
+		}
+  }
+`
+const StyledFormRadio = styled(FormRadio)`
+	display: flex;
+	align-items: center;
+`
+const StyledButtonLoader = styled(ButtonLoader)`
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+`
+
+class HeaderListaConta extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this)
+    this.state = {
+		active: null,
+		checked: false,
+		disable: false,
+		placeholderModal: 'Informe o e-mail',
+		checkedDefault: 'email',
+		email: '',
+		errors: true
+    }
+  }
+  handleClick(i){
+    return (e) => {
+			let active = this.state.active === i ? null : i
+      this.setState({active: active})
+    }
+  }
+  selectAllChecks() {
+		this.setState({checked: !this.state.checked});
+  }
+  changePlaceholder(e) {
+		let pla = this.state.placeholderModal
+		if(e.target.value == 'email'){
+			pla = 'Informe o e-mail'
+		}else{
+			pla = 'Informe o número do celular Oi com DDD'
+      }
+		this.setState({placeholderModal: pla, checkedDefault: e.target.value, email: ''})
+  }
+
+	handleEmail(e){
+		this.setState({ email: e.target.value })
+	}
+
+	handleSubmit(e) {
+		if (e) {
+		e.preventDefault();
+		return;
+
+		}
+		const { email } = this.state;
+		alert(`Signed up with email: ${email}`);
+		e.preventDefault();
+	}
+
+	checkErrors() {
+		if(this.state.email)
+			this.setState({errors: false})
+		else
+			this.setState({errors: true})
+	}
+
+  	render() {
+	  	let p = this.props
+		let isDisabled = this.state.errors;
+		return (
+      <Grid>
+        <StyledInfo statusColor='link'>
+          <Text type="span">
+            <FormCheck
+							id="select-conta"
+							name="selecionar-conta"
+							label='Selecionar todas'
+							value=""
+							onChange={this.props.onChange}
+							margin={[0, 0]} />
+          </Text>
+          <List type="ul" direction='horizontal'>
+						{this.props.qtdContas === 0 ?
+							<Popover>
+							<Button styleButton="linkface" >{this.props.qtdContas}</Button>
+							<PopContent>
+								<Text>Selecione pelo menos uma das contas
+								abaixo para realizar essa ação.
+								</Text>
+							</PopContent>
+						</Popover> :
+
+						<Button styleButton="linkface" onClick={() => window.print()}>{this.props.qtdContas}</Button>
+						}
+            <Button styleButton="linkface"
+              onClick={() => this.Modal.handleClick()}>Enviar</Button>
+          </List>
+        </StyledInfo>
+
+
+		{/* Modal Envio código */}
+        <Modal ref={(modal) => { this.Modal = modal; }}>
+			<Grid className='container'>
+				<Grid className='row'>
+					<Grid col className="col-12">
+						<Title type={1} statusColor='primary' >Enviar código de barras</Title>
+						<Form onChange={() => this.checkErrors.bind(this)}>
+						<StyledList onClick={this.changePlaceholder.bind(this)}>
+						<FormRadio
+							items={[
+								{ value: "email", label: "E-mail" },
+								{ value: "tel", label: "SMS para celular Oi" }
+							]}
+							name="opt-group" value="email" className="radio-group" />
+						</StyledList>
+
+						<FormInput
+							id='email-modal-conta'
+							id='refInput'
+							name="name-raio-input"
+							validationType={this.state.checkedDefault}
+							value={this.state.email}
+							onChange={this.handleEmail.bind(this)}
+							placeholder={this.state.placeholderModal} />
+						<ReCAPTCHA
+							ref="recaptcha"
+							sitekey="6LfJ5UAUAAAAABkdOADMno6tj9BKYOBLBGkzdGuT"
+							onChange={() => this.setState({errors: false})}
+						/>
+						<StyledButtonLoader disabled={isDisabled} type="button">Enviar</StyledButtonLoader>
+						</Form>
+					</Grid>
+				</Grid>
+			</Grid>
+        </Modal>
+      </Grid>
+    )
+  }
+}
+
+export { HeaderListaConta }
+export default HeaderListaConta
+==============================================
+import React, { Component } from "react"
+import ReactDOM from "react-dom"
+
+import Grid from '../../atoms/Grid'
+import Icon from '../../atoms/Icon'
+import List from '../../atoms/List'
+import Text from '../../atoms/Text'
+import Title from '../../atoms/Title'
+import Button from '../../atoms/Button'
+import Tab from './../Tab'
+import Table from '../../molecules/Table'
+import Modal from '../../molecules/Modal'
+import Form, {FormRadio, FormCheck, FormInput, FormSelect} from '../../molecules/Form'
+
+import HeaderListaConta from './../HeaderListaConta'
+import ListaConta from './../ListaConta'
+import CodBarra from './../../../assets/images/barras.png'
+import TemplateLista from './template'
+import CheckIcon from 'mdi-react/CheckIcon' 
+
+class ListaContas extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectAll: false,
+            isChecked: false
+        }
+    }
+
+    handleSelectAll() {
+        this.setState({ selectAll: !this.state.selectAll })
+    }
+
+    isChecked() {
+        this.setState({isChecked: !this.state.isChecked })
+    }
+    
+    render() {
+		let p = this.props
+        return(
+			<TemplateLista
+                content={[
+                    <Title>Para realizar o pagamento:</Title>,
+                    <List type='ul'>
+                      <Text><CheckIcon /> Digite o código em caixas eletrônicos ou Internet Banking</Text>
+                      <Text><CheckIcon /> Pra pagar em caixas de banco, utilize a versão impressa</Text>
+                    </List>
+            ]}>
+                <HeaderListaConta allSelected={this.state.selectAll} onChange={this.handleSelectAll.bind(this)} qtdContas={!this.state.selectAll}   />
+                
+                <ListaConta
+                    numTel="(21) 99967-0014"
+                    onChange={this.isChecked.bind(this)}
+                    allChecked={this.state.selectAll}
+                    firstNumber={[
+                    {"barCode": 199, "valor": 129.87, "codbarras": "You don't want to own this!", "date": "11/01/2018", "block": true, "src": CodBarra},
+                    {"barCode": 324, "valor": 115.98, "codbarras": "You might want to own this!", "date": "12/04/2017", "block": false},
+                    {"barCode": 731, "valor": 360.62, "codbarras": "You might want to own this!", "date": "12/04/2017", "block": false}
+                    ]}
+                />
+            </TemplateLista>
+        )
+    }
+}
+
+export { ListaContas }
+export default ListaContas
