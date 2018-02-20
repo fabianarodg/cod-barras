@@ -1,12 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled, { css, extend } from 'styled-components';
-import { prop, ifProp, switchProp } from 'styled-tools';
+import styled from 'styled-components';
 
-
-import * as m from './../../styles/mixins';
-
-export const StyledItem = styled.li`
+const StyledItem = styled.li`
     list-style:none;
     border-bottom: 1px solid #4a4a4a;
 
@@ -49,3 +43,5 @@ export const StyledItem = styled.li`
         align-self:flex-end;
     }
 `;
+
+export default StyledItem;

@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
-import { prop, ifProp, switchProp } from 'styled-tools';
+import styled from 'styled-components';
 
-import Grid from '../../atoms/Grid';
-import Text from '../../atoms/Text';
-import Title from '../../atoms/Title';
-import Alert from '../../molecules/Alert';
-import ItemConta from './itemConta';
-
-import styles from './index.styles';
-import * as m from './../../styles/mixins';
+import { Grid } from '../../atoms/Grid';
+import { Text } from '../../atoms/Text';
+import { Title } from '../../atoms/Title';
+import { Alert } from '../../molecules/Alert';
+import { ItemConta } from './itemConta';
 
 const StyledUl = styled.ul`
   padding:0;
@@ -26,28 +22,24 @@ class ListaConta extends Component {
     };
 
 
-    console.log(this.props.produto);
-    // this.listarContas(this.props.contas)
-  }
+    this.showAlert = (showAlert) => {
+      let sAlert;
+      if (showAlert) {
+        sAlert = (
+          <Alert
+            status="info"
+            title="Atenção: Produto com conta em débito automático"
+            className="margin-alert"
+            margin={[18, 0, 0, 0]}
+          >A conta a vencer terá o pagamento realizado automaticamente em sua conta corrente
+na data do vencimento. Caso tenha algum dúvida entre em contato com seu banco.
+          </Alert>
+        );
+      }
+      return sAlert;
+    };
 
-  showAlert(showAlert) {
-    if (showAlert) {
-      return (
-        <Alert
-          status="info"
-          title="Atenção: Produto com conta em débito automático"
-          className="margin-alert"
-          margin={[18, 0, 0, 0]}
-        >
-						A conta a vencer terá o pagamento realizado automaticamente em sua conta corrente
-						na data do vencimento. Caso tenha algum dúvida entre em contato com seu banco.
-        </Alert>
-      );
-    }
-  }
-
-  mapTerms(prod) {
-    return (<div> {prod.terminais.map((item, index) =>
+    this.mapTerms = prod => (<div> {prod.terminais.map(item =>
       (<Grid className="col-md-12">
         <Grid statusColor="light">
           <Grid className="container">
@@ -61,32 +53,41 @@ class ListaConta extends Component {
         <Grid className="container">
           <StyledUl>
             {
-						item.faturas.map((m, x) =>
-  (<ItemConta
-    onChange={this.props.onChange}
-    valor={m.valor}
-    codigoDeBarras={m.codigoDeBarras}
-    data={m.data}
-    tem14Meses={m.tem14Meses}
-    imgCodBarras={m.imgCodBarras}
-    checked={m.checked ? m.checked : false}
-  />))
-					}
+              item.faturas.map(m =>
+                (<ItemConta
+                  onChange={this.props.onChange}
+                  valor={m.valor}
+                  codigoDeBarras={m.codigoDeBarras}
+                  data={m.data}
+                  tem14Meses={m.tem14Meses}
+                  imgCodBarras={m.imgCodBarras}
+                  checked={m.checked ? m.checked : false}
+                />))
+            }
           </StyledUl>
         </Grid>
       </Grid>))}
-            </div>);
+    </div>);
   }
 
-
   render() {
-    const p = this.props;
     return (
-
-      this.mapTerms(p.produto)
-
+      this.mapTerms(this.props.produto)
     );
   }
 }
+
+ListaConta.propTypes = {
+  onChange: PropTypes.func,
+  produto: PropTypes.node,
+};
+
+ListaConta.defaultProps = {
+  onChange: function onChange(prod) {
+    return prod;
+  },
+  produto: {},
+};
+
 export { ListaConta };
 export default ListaConta;

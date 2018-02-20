@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 import page from './pages/index';
+import PageLista from './pages/pageLista';
 
 require('./components/styles/global-styles');
 
@@ -21,6 +22,7 @@ const app = () => (
     </Helmet>
     <Switch>
       <Route path="/" component={page} exact />
+      <Route path="/lista-conta" component={PageLista} exact />
     </Switch>
   </div>
 );

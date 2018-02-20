@@ -1,3 +1,5 @@
+// import React from 'react';
+
 export const isIncomplete = (inputLength, shouldHave) => {
   if (inputLength < shouldHave) { return true; }
   return false;
@@ -14,17 +16,14 @@ export const validarCPF = (valInput) => {
   // Elimina CPFs invalidos conhecidos
   if (cpf.length !== 11 || invalidos.test(cpf)) { return false; }
 
-  for (i = 0; i < 9; i + 1) {
-    add += parseInt(cpf.charAt(i)) * (10 - i);
-  }
-
+  for (i = 0; i < 9; i += 1) { add += parseInt(cpf.charAt(i), 10) * (10 - i); }
   rev = 11 - (add % 11);
   if (rev === 10 || rev === 11) { rev = 0; }
-  if (rev !== parseInt(cpf.charAt(9))) { return false; }
+  if (rev !== parseInt(cpf.charAt(9), 10)) { return false; }
   // Valida 2o digito
   add = 0;
-  for (i = 0; i < 10; i + 1) {
-    add += parseInt(cpf.charAt(i)) * (11 - i);
+  for (i = 0; i < 10; i += 1) {
+    add += parseInt(cpf.charAt(i), 10) * (11 - i);
   }
 
   // ???
@@ -32,7 +31,7 @@ export const validarCPF = (valInput) => {
   if (rev === 10 || rev === 11) {
     rev = 0;
   }
-  if (rev !== parseInt(cpf.charAt(10))) {
+  if (rev !== parseInt(cpf.charAt(10), 10)) {
     return false;
   }
   return true;
@@ -71,22 +70,24 @@ export const validarCNPJ = (valInput) => {
   const digitos = cnpj.substring(tamanho);
   let soma = 0;
   let pos = tamanho - 7;
-  for (let i = tamanho; i >= 1; i - 1) {
-    soma += numeros.charAt(tamanho - i) * pos - 1;
+  for (let i = tamanho; i >= 1; i -= 1) {
+    pos -= 1;
+    soma += numeros.charAt(tamanho - i) * pos;
     if (pos < 2) { pos = 9; }
   }
-  let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+  let resultado = (soma % 11) < 2 ? 0 : 11 - (soma % 11);
   if (resultado !== digitos.charAt(0)) { return false; }
 
   tamanho += 1;
   numeros = cnpj.substring(0, tamanho);
   soma = 0;
   pos = tamanho - 7;
-  for (let i = tamanho; i >= 1; i - 1) {
-    soma += numeros.charAt(tamanho - i) * pos - 1;
+  for (let i = tamanho; i >= 1; i -= 1) {
+    pos -= 1;
+    soma += numeros.charAt(tamanho - i) * pos;
     if (pos < 2) { pos = 9; }
   }
-  resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+  resultado = (soma % 11) < 2 ? 0 : 11 - (soma % 11);
   if (resultado !== digitos.charAt(1)) { return false; }
 
   return true;
@@ -110,10 +111,10 @@ export const formatarCNPJ = (idInput, valInput) => {
     document.getElementById(idInput).value = maxInput;
   }
 };
-
+/* eslint-disable */
 export const validarEMAIL = (valInput) => {
-  const valido = /^((["^<>()\[\]\\.,;:\s@"]+(\.["^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(("\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\]")|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
+  const valido = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  /* eslint-enable */
   if (valido.test(valInput)) {
     return true;
   }

@@ -36,66 +36,66 @@ class Alert extends Component {
     super(props);
 
     this.iconAlert = '';
+
+    this.checkStatus = (status) => {
+      switch (status) {
+        case 'success':
+          this.iconAlert = <CheckIcon width="20" height="20" />;
+          break;
+        case 'warning':
+          this.iconAlert = <AlertCircleIcon width="20" height="20" />;
+          break;
+        case 'error':
+          this.iconAlert = <CancelIcon width="20" height="20" />;
+          break;
+        case 'info':
+          this.iconAlert = <InformationIcon width="20" height="20" />;
+          break;
+        default:
+          this.iconAlert = false;
+      }
+      return this.iconAlert;
+    };
+
+    this.checkTitle = () => {
+      let title;
+      if (this.props.title) {
+        title = (<Title
+          margin={0}
+          type={props.typeTitle}
+          fontSize={2}
+          statusColor={props.statusColor}
+        >{props.title}</Title>);
+      }
+      return title;
+    };
+
+    this.checkText = () => (<Text
+      margin={[5, 0]}
+      statusColor={this.props.statusColor}
+    >{this.props.text || this.props.children}</Text>);
+
+    this.showInfo = () => {
+      let content = '';
+      if (this.props.status) {
+        content = (<Wrapper>
+          <div>{this.checkStatus(this.props.status)}</div>
+          <div className="text-content">
+            {this.checkTitle()}
+            {this.checkText()}
+          </div>
+        </Wrapper>);
+      } else {
+        content = (<div className="col-12">
+          {this.checkTitle()}
+          {this.checkText()}
+        </div>);
+      }
+
+      return content;
+    };
   }
 
-  checkStatus(status) {
-    switch (status) {
-      case 'success':
-        this.iconAlert = <CheckIcon width="20" height="20" />;
-        break;
-      case 'warning':
-        this.iconAlert = <AlertCircleIcon width="20" height="20" />;
-        break;
-      case 'error':
-        this.iconAlert = <CancelIcon width="20" height="20" />;
-        break;
-      case 'info':
-        this.iconAlert = <InformationIcon width="20" height="20" />;
-        break;
-      default:
-        this.iconAlert = false;
-    }
-    return this.iconAlert;
-  }
-
-  checkTitle(props) {
-    let title;
-    if (this.props.title) {
-      title = (<Title
-        margin={0}
-        type={props.typeTitle}
-        fontSize={2}
-        statusColor={props.statusColor}
-      >{props.title}</Title>);
-    }
-    return title;
-  }
-
-  checkText(props) {
-    return <Text margin={[5, 0]} 
-      statusColor={props.statusColor}
-    >{props.text || props.children}</Text>;
-  }
-
-  showInfo(props) {
-    let content = '';
-    if (props.status) {
-      content = (<Wrapper>
-        <div>{this.checkStatus(props.status)}</div>
-        <div className="text-content">
-          {this.checkTitle(props)}
-          {this.checkText(props)}
-        </div>
-      </Wrapper>);
-    } else {
-      content = (<div className="col-12">
-        {this.checkTitle(props)}
-        {this.checkText(props)}
-      </div>);
-    }
-
-    return content;
-  }
 
   render() {
     const p = this.props;
@@ -124,6 +124,8 @@ Alert.propTypes = {
     PropTypes.array,
     PropTypes.number,
   ]),
+  children: PropTypes.node.isRequired,
+  status: PropTypes.string,
 };
 
 Alert.defaultProps = {
@@ -133,6 +135,9 @@ Alert.defaultProps = {
   typeTitle: 2,
   margin: 10,
   padding: 10,
+  title: '',
+  text: '',
+  status: '',
 };
 
 export { Alert };

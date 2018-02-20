@@ -1,9 +1,8 @@
-import React, { Component, ClientRect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
-import { prop, ifProp, switchProp } from 'styled-tools';
-import Button from './../../atoms/Button';
-import Icon from './../../atoms/Icon';
+import styled from 'styled-components';
+import { Button } from './../../atoms/Button';
+import { Icon } from './../../atoms/Icon';
 
 import * as m from '../../styles/mixins';
 
@@ -60,6 +59,7 @@ const LoadingIcon = styled(Icon)`
 class ButtonLoader extends React.Component {
   constructor(props) {
     super(props);
+    this.loading = this.loading.bind(this);
     this.state = {
       isLoading: false,
     };
@@ -72,8 +72,16 @@ class ButtonLoader extends React.Component {
   }
 
   showLabel(props) {
-    if (this.state.isLoading) { return <LoadingIcon type="loading" size={3} />; }
-    return props.children;
+    let ch;
+    if (this.state.isLoading) {
+      ch = (<LoadingIcon
+        type="loading"
+        size={3}
+      />);
+    } else {
+      ch = props.children;
+    }
+    return ch;
   }
 
   render() {
@@ -81,7 +89,7 @@ class ButtonLoader extends React.Component {
     return (
       <StyledButton
         {...p}
-        onClick={this.loading.bind(this)}
+        onClick={this.loading}
         margin={0}
         statusColor={p.statusColor}
         styleButton={p.styleButton}

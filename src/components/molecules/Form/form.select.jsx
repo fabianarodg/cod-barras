@@ -93,6 +93,10 @@ const showNotice = (props) => {
 
 
 class FormSelect extends Component {
+  propTypes = {
+    placeholder: PropTypes.string.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.selectItem = this.selectItem.bind(this);

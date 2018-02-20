@@ -1,53 +1,51 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
-import { prop, ifProp, switchProp } from 'styled-tools';
+import styled from 'styled-components';
+/* import { prop, ifProp, switchProp } from 'styled-tools'; */
 
-import * as m from '../../styles/mixins';
+/* import * as m from '../../styles/mixins'; */
 
-import Text from '../../atoms/Text';
+import { Text } from '../../atoms/Text';
 
 const StyledRadio = styled.div`
-     padding: 1em;
-     position: relative;
-     display: flex;
-     label {
-          padding: .5em;
-          position: relative;
-	        cursor: pointer;
-      		text-align: left;
-      		display: flex;
-          align-items: center;
-          & .helper {
-      		position: absolute;
-          top: 10px;
-          left: 0;
-      		cursor: pointer;
-      		display: block;
-      		font-size: $mf-font-size;
-      		user-select: none;
-      		color: #d82482;
-
-      		&::before,
-      		&::after {
-      			content: '';
-      			position: absolute;
-      			left: 0;
-      			top: 0;
-      			width:20px;
-      			height: 20px;
-      			transition: transform 0.28s ease;
-      			border-radius: 50%;
-      			border: 2px solid #d82482;
-      		}
-
-      		&::after {
-      			transform: scale(0);
-      			background-color: #d82482;
-      			border-color: #d82482;
-      		}
-      	}
-        & span {
+     padng: 1em;
+     posion: relative;
+     disay: flex;
+     lab {
+    padding: .5em;
+    position: relative;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    & .helper {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    cursor: pointer;
+    display: block;
+    font-size: $mf-font-size;
+    user-select: none;
+    color: #d82482
+    &::before,
+    &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width:20px;
+    height: 20px;
+    transition: transform 0.28s ease;
+    border-radius: 50%;
+    border: 2px solid #d82482;
+      
+      &::after {
+      transform: scale(0);
+      background-color: #d82482;
+      border-color: #d82482;
+      }
+      
+        span {
           margin: 3px 0 0 24px;
         }
         input:checked {
@@ -104,40 +102,38 @@ class FormRadio extends Component {
     return (
       <StyledRadio>
         {this.props.items.map(item => (
-          <label key={item.value}>
+          <label key={item.value} htmlFor>
             <input
               type="radio"
               checked={this.state.value === item.value}
               disabled={item.disabled}
               value={item.value}
               name={this.props.name}
-              onChange={this.onChange.bind(this)}
+              onChange={this.onChange}
             />
             <i className="helper" />
             <Text type="span">{item.label}</Text>
 
           </label>
-                         ))}
+        ))}
       </StyledRadio>
     );
   }
 }
 
 FormRadio.propTypes = {
-  name: React.PropTypes.string.isRequired,
-  value: React.PropTypes.string.isRequired,
-  items: React.PropTypes.arrayOf(React.PropTypes.shape({
-    value: React.PropTypes.string.isRequired,
-    label: React.PropTypes.string.isRequired,
-    checked: React.PropTypes.bool,
-  })).isRequired,
-  onUpdate: React.PropTypes.func,
+  name: PropTypes.string,
+  value: PropTypes.string.isRequired,
+  items: PropTypes.arrayOf(PropTypes.any).isRequired,
+  onUpdate: PropTypes.func,
 };
 
-
-function onChange(value) {
-  console.log(value);
-}
+FormRadio.defaultProps = {
+  onUpdate: function onUpdate(propValue) {
+    return propValue;
+  },
+  name: 'name1',
+};
 
 
 export { FormRadio };

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
-import { prop, ifProp, switchProp } from 'styled-tools';
+import styled from 'styled-components';
+import { prop } from 'styled-tools';
 
 import * as m from '../../styles/mixins';
-import List from './../../atoms/List';
-import Text from './../../atoms/Text';
-import * as styles from './form.styles';
+import { Text } from './../../atoms/Text';
 
 
 const StyledCheck = styled.input`
@@ -63,20 +61,22 @@ const CheckWrapper = styled.label`
 class FormCheck extends Component {
   constructor(props) {
     super(props);
+    this.toggleChange = this.toggleChange.bind(this);
     this.state = {
       isChecked: this.props.checked,
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.checked !== this.state.isChecked) {
+      this.setState({ isChecked: nextProps.checked });
+    }
+  }
+
   toggleChange() {
     const changeSt = !this.state.isChecked;
     this.setState({ isChecked: changeSt });
-    this.props.onChange;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.checked != this.state.isChecked) {
-      this.setState({ isChecked: nextProps.checked });
-    }
+    this.props.onChange();
   }
 
   render() {
@@ -88,26 +88,35 @@ class FormCheck extends Component {
           type="checkbox"
           checked={this.state.isChecked}
           value={this.props.value}
-          onChange={this.toggleChange.bind(this)}
+          onChange={this.toggleChange}
         />
-        {p.children || p.label}
+        <Text>{p.children || p.label}</Text>
         <div className="checkmark" />
       </CheckWrapper>
     );
   }
 }
 
-FormCheck.PropTypes = {
+FormCheck.propTypes = {
   statusColor: PropTypes.oneOf(['primary', 'secondary', 'success', 'error', 'warning', 'info', 'light', 'dark', 'link', 'white', 'black']),
   margin: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.number]),
   label: PropTypes.string,
   spacing: PropTypes.number,
+  checked: PropTypes.bool,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 FormCheck.defaultProps = {
   statusColor: 'primary',
   margin: [20, 15],
   spacing: 25,
+  checked: false,
+  value: '',
+  label: '',
+  onChange: function onChange(param) {
+    return param;
+  },
 };
 
 export { FormCheck };

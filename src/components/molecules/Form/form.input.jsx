@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
-import { prop, ifProp, switchProp } from 'styled-tools';
+import styled from 'styled-components';
 
-import * as m from '../../styles/mixins';
-import Grid from './../../atoms/Grid';
-import Text from './../../atoms/Text';
+import { Text } from './../../atoms/Text';
 import * as styles from './form.styles';
 import * as v from './validator';
 
@@ -43,20 +40,20 @@ class FormInput extends Component {
   }
 
   validar(e) {
-    const { validationType } = this.props;
+    const validationType = this.props;
     e.preventDefault();
     const valInput = e.target.value;
 
-    if (validationType == 'cpf') {
+    if (validationType === 'cpf') {
       const valF = v.validarCPF(valInput);
       this.warnValidation(valF);
-    } else if (validationType == 'cnpj') {
+    } else if (validationType === 'cnpj') {
       const valJ = v.validarCNPJ(valInput);
       this.warnValidation(valJ);
-    } else if (validationType == 'email') {
+    } else if (validationType === 'email') {
       const valE = v.validarEMAIL(valInput);
       this.warnValidation(valE);
-    } else if (validationType == 'tel') {
+    } else if (validationType === 'tel') {
       this.warnValidation(valInput);
     }
   }
@@ -70,9 +67,9 @@ class FormInput extends Component {
     const inputLength = valInput.length;
 
 
-    if (valInput == '') {
+    if (valInput === '') {
       this.resetState();
-    } else if (validationType == 'cpf') {
+    } else if (validationType === 'cpf') {
       size = 14;
       v.formatarCPF(idInput, valInput);
 
@@ -80,7 +77,7 @@ class FormInput extends Component {
         const valF = v.validarCPF(valInput);
         this.warnValidation(valF);
       } else { this.resetState(); }
-    } else if (validationType == 'cnpj') {
+    } else if (validationType === 'cnpj') {
       size = 18;
       v.formatarCNPJ(idInput, valInput);
 
@@ -88,7 +85,7 @@ class FormInput extends Component {
         const valJ = v.validarCNPJ(valInput);
         this.warnValidation(valJ);
       }
-    } else if (validationType == 'tel') {
+    } else if (validationType === 'tel') {
       size = 11;
       v.formatarTEL(idInput, valInput);
       const newSize = size + 4;
@@ -100,7 +97,7 @@ class FormInput extends Component {
   }
 
 
-  showNotice(props, status, notice) {
+  showNotice = (props, status, notice) => {
     if (notice) {
       return (<Text
         type="span"
@@ -110,7 +107,8 @@ class FormInput extends Component {
       >{notice}
       </Text>);
     }
-  }
+    return false;
+  };
 
   render() {
     const p = this.props;
@@ -139,7 +137,7 @@ class FormInput extends Component {
   }
 }
 
-FormInput.PropTypes = {
+FormInput.propTypes = {
   type: PropTypes.oneOf(['text', 'password']),
   required: PropTypes.bool,
   onKeyUp: PropTypes.func,
@@ -169,6 +167,7 @@ FormInput.PropTypes = {
 
 FormInput.defaultProps = {
   type: 'text',
+  validationType: 'cpf',
   required: false,
   status: {
     label: 'black',
@@ -189,6 +188,12 @@ FormInput.defaultProps = {
     fontFamily: 'Simplon',
     fontSize: -2,
     fontWeight: 'Regular',
+  },
+  onKeyUp: function onKeyUp(param) {
+    return param;
+  },
+  onBlur: function onBlur(param) {
+    return param;
   },
 };
 

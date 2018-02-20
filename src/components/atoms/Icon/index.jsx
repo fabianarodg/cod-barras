@@ -39,7 +39,7 @@ const StyledIcon = styled.i`
     }
   `;
 
-const getIcon = props => (icons[props.type] ? icons[props.type](props) : (<svg />));
+const getIcon = icon => (icons[icon.type] ? icons[icon.type](icon) : (<svg />));
 
 // Component Core
 const Icon = props => (
@@ -49,7 +49,7 @@ const Icon = props => (
 );
 
 // Component Props
-Icon.PropTypes = {
+Icon.propTypes = {
   type: PropTypes.string.isRequired,
   size: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7]),
   width: PropTypes.number,
