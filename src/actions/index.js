@@ -1,20 +1,10 @@
 // import Axios from 'axios';
 
-export const INCREMENT_COUNTER = 'INCREMENT_COUNTER';
-export const increment = () => async (dispatch) => {
+export const SET_CPF = 'SET_CPF';
+
+export const setCPF = data => async (dispatch) => {
   dispatch({
-    type: INCREMENT_COUNTER,
-  });
-};
-
-export const incrementIfOdd = () => async (dispatch, getState) => {
-  const { counter } = getState();
-
-  if (counter % 2 === 0) {
-    return;
-  }
-
-  dispatch({
-    type: INCREMENT_COUNTER,
+    type: SET_CPF,
+    payload: data,
   });
 };

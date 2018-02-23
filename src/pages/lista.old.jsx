@@ -11,7 +11,6 @@ class PageLista extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hello: 'Hello react-boilerplate',
     };
   }
 
@@ -23,9 +22,7 @@ class PageLista extends Component {
   render() {
     const props = this.props;
     return (
-      <div id="principal" className="dashboard-app">
-        <div>{this.state.hello}</div>
-        <button onClick={this.onClickIncrementar}>Incrementar</button>
+      <div id="principal">
         <Title>Título Correto</Title>
         <Text>Texto correto</Text>
         <ListaConta

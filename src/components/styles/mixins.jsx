@@ -9,6 +9,7 @@ const rem = (number) => {
   return `${tmp}rem`;
 };
 
+
 const subtract1Px = (number) => {
   let tmp = number;
   tmp = (typeof (number) === 'string' && number.indexOf('px')) ? number.replace('px', '') : number;
@@ -155,9 +156,21 @@ const fontWeight = (Weight) => {
   return varWeight;
 };
 
+const numericoLeitor = (v) => {
+  const arr = v.split(' ');
+  let codigoFormatado = '';
+
+  arr.forEach((item) => {
+    codigoFormatado += item.substr(0, 11);
+  });
+
+  return codigoFormatado;
+};
+
 export { rem,
   subtract1Px,
   setSizes,
+  numericoLeitor,
   gradient,
   checkTheme,
   darkenColor,

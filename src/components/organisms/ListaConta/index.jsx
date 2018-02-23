@@ -8,6 +8,7 @@ import { Title } from '../../atoms/Title';
 import { Alert } from '../../molecules/Alert';
 import { ItemConta } from './itemConta';
 
+
 const StyledUl = styled.ul`
   padding:0;
 `;
@@ -60,9 +61,11 @@ na data do vencimento. Caso tenha algum dúvida entre em contato com seu banco.
                   codigoDeBarras={m.codigoDeBarras}
                   data={m.data}
                   tem14Meses={m.tem14Meses}
-                  imgCodBarras={m.imgCodBarras}
+                  imgCodBarras={m.codigoDeBarras}
                   checked={m.checked ? m.checked : false}
-                />))
+                />),
+                // (<div onChange={this.props.onChange}> {m.codigoDeBarras} </div>),
+              )
             }
           </StyledUl>
         </Grid>

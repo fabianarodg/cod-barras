@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import example from './example';
+import faturas from './lista';
 
-const Reducers = combineReducers({ example });
+const Reducers = combineReducers({ faturas });
 
 export default Reducers;

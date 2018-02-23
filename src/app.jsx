@@ -1,9 +1,11 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { MasterPage } from 'coi';
+import './assets/fonts/fonts.css';
 
-import page from './pages/index';
-import PageLista from './pages/pageLista';
+import Home from './pages/index';
+import Lista from './pages/lista';
 
 require('./components/styles/global-styles');
 
@@ -20,10 +22,13 @@ const app = () => (
       />
       <link rel="canonical" href="http://www.homepage.com/" />
     </Helmet>
-    <Switch>
-      <Route path="/" component={page} exact />
-      <Route path="/lista-conta" component={PageLista} exact />
-    </Switch>
+    <MasterPage active={1}>
+      <Switch>
+        <Redirect exact from="/" to="home" />
+        <Route path="/home" component={Home} />
+        <Route path="/lista" component={Lista} />
+      </Switch>
+    </MasterPage>
   </div>
 );
 

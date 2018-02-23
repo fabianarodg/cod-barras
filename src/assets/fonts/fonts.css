@@ -1,0 +1,34 @@
+@font-face {
+  font-family: 'SimplonBP';
+  font-weight: normal;
+  src:  url('./SimplonBP/OTF/SimplonBP-Regular.otf') format('opentype'),
+        url('./SimplonBP/WOFF/SimplonBP-Regular.woff') format('woff'),
+        url('./SimplonBP/TTF/SimplonBP-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SimplonBP';
+  font-weight: bold;
+  src:   url('./SimplonBP/OTF/SimplonBP-Medium.otf') format('opentype'),
+        url('./SimplonBP/WOFF/SimplonBP-Medium.woff') format('woff'),
+        url('./SimplonBP/TTF/SimplonBP-Medium.ttf') format('truetype');
+}
+
+/* 
+Light
+Regular
+Medium
+Bold
+*/
+
+@font-face {
+  font-family: 'SimplonBP-Headline';
+  src:   url('./SimplonBP-Headline/OTF/SimplonOi-Headline.otf') format('opentype'),
+         url('./SimplonBP-Headline/WOFF/SimplonOi-Headline.woff') format('woff'),
+         url('./SimplonBP-Headline/TTF/SimplonOi-Headline.ttf') format('truetype');
+}
+
+body {
+  font-family: 'SimplonBP', serif;
+  margin: 0;
+}

@@ -16,8 +16,14 @@ const StyledInput = styled.input`
 
 const InputWrapper = styled.div`
     display: flex;
+    position: relative;
     flex-direction: column;
     margin: 20px 0;
+    .posNotice {
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+    }
 `;
 
 class FormInput extends Component {
@@ -103,7 +109,7 @@ class FormInput extends Component {
         type="span"
         fontSize={props.noticeFont.fontSize}
         fontWeight={props.noticeFont.fontWeight}
-        themeColor={status}
+        statusColor={status === 'error' ? '#F8562C' : ''}
       >{notice}
       </Text>);
     }
@@ -112,26 +118,27 @@ class FormInput extends Component {
 
   render() {
     const p = this.props;
-    const st = this.state.status ? this.state.status : p.status.notice;
+    const st = this.state.status ? this.state.status : p.status;
     const ntText = this.state.notice ? this.state.notice : p.notice;
     return (
-      <InputWrapper>
+      <InputWrapper className="loc">
         <Text
-          type="label"
-          htmlFor={p.id}
+          type="span"
           fontFamily={p.labelFont.fontFamily}
           fontSize={p.labelFont.fontSize}
           fontWeight={p.labelFont.fontWeight}
-          themeColor={this.state.status ? this.state.status : p.status.label}
+          statusColor={p.status === 'error' ? '#F8562C' : ''}
         >{p.label}{}
         </Text>
         <StyledInput
-          status={this.state.status ? this.state.status : p.status.input}
+          status={this.state.status ? this.state.status : p.status}
           onKeyUp={this.formatarValidar}
           onBlur={this.validar}
           {...p}
         />
-        {this.showNotice(p, st, ntText)}
+        <div className="posNotice">
+          {this.showNotice(p, st, ntText)}
+        </div>
       </InputWrapper>
     );
   }

@@ -100,7 +100,7 @@ class ButtonLoader extends React.Component {
   }
 }
 
-ButtonLoader.PropTypes = {
+ButtonLoader.propTypes = {
   statusColor: PropTypes.oneOfType([
     PropTypes.oneOf(['primary', 'secondary', 'success', 'error', 'warning', 'info', 'light', 'dark', 'link', 'bg', 'front']),
     PropTypes.string,

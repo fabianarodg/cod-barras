@@ -25,7 +25,7 @@ const Grid = props => (
 
 // Component Props
 Grid.propTypes = {
-  statusColor: PropTypes.oneOf(['primary', 'secondary', 'success', 'error', 'warning', 'info', 'light', 'dark', 'link']),
+  statusColor: PropTypes.oneOf(['primary', 'secondary', 'success', 'error', 'warning', 'info', 'light', 'dark', 'link', 'transparent']),
   align: PropTypes.oneOf(['stretch', 'flex-start', 'flex-end', 'center', 'baseline']),
   corners: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.number]),
   margin: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.number]),
@@ -37,7 +37,7 @@ Grid.propTypes = {
   height: PropTypes.number,
   opacity: PropTypes.number,
   bg: PropTypes.string,
-  children: PropTypes.string,
+  children: PropTypes.node.isRequired,
 };
 
 Grid.defaultProps = {
@@ -53,7 +53,6 @@ Grid.defaultProps = {
   height: 0,
   opacity: 1,
   bg: '#FFF',
-  children: '',
 };
 export default Grid;
 export { Grid };

@@ -10,7 +10,7 @@ const StyledText = styled.p`
     font-family: ${prop('fontFamily')};
     font-weight: ${props => props.fontWeight && `${m.fontWeight(props.fontWeight)}`};
     font-size: ${props => props.fontSize && `${m.calcSize(props.fontSize)}`};
-    color: ${props => props.statusColor && `${m.checkTheme(props.statusColor, props)}`};
+    color: ${props => props.statusColor && `${props.statusColor}`};
     margin: ${props => props.margin && `${m.setSizes(props.margin)}`};
     padding: ${props => props.padding && `${m.setSizes(props.padding)}`};
     text-align:${ifProp('align', prop('align'))};
