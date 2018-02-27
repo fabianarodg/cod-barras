@@ -47,8 +47,8 @@ class Burger extends Component {
   render() {
     const p = this.props;
     return (
-      <BurgerButton 
-        className="burger" 
+      <BurgerButton
+        className="burger"
         onClick={this.handleClick.bind(this)}
       >
         <StyledBurger

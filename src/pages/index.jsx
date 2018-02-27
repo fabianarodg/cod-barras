@@ -35,6 +35,7 @@ class Home extends Component {
       if (event) event.preventDefault();
       this.props.setCPF(this.state.cpf);
       this.props.history.push('/lista');
+      console.log(this.state);
     };
   }
 

@@ -14,52 +14,50 @@ import PrintList from './printList'
 
 const StyledUl = styled.ul `
   padding:0;
-`
+`;
 
 class ListaComHeader extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            check: [],
-            enablePrint: false
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      check: [],
+      enablePrint: false,
+    };
 
-        this.items = this.props.contas.contas;
-        this.handleChange = (index, value) => {
-            let newcheck = [...this.state.check];
-            newcheck[index] = value;
-            let enPrint = this.enablePrint(newcheck);
-            this.setState({check: newcheck, enablePrint: enPrint});
-            
-            console.log('handleChange',enPrint);
-            
-        }
+    this.items = this.props.contas.contas;
+    this.handleChange = (index, value) => {
+      const newcheck = [...this.state.check];
+      newcheck[index] = value;
+      const enPrint = this.enablePrint(newcheck);
+      this.setState({ check: newcheck, enablePrint: enPrint });
+      console.log('handleChange', enPrint);
+    };
 
-        this.enablePrint = (items) => {
-            let val = false
-            for(let i = 0; i < items.length; i++) {
-                if(items[i]) val = true
-            }
-            return val
-        }
+    this.enablePrint = (items) => {
+      let val = false;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i]) val = true;
+      }
+      return val;
+    };
 
-        this.lookAll = () => {
-            let result = this.state.check.every((item) => item);
-            return result;
-        }
+    this.lookAll = () => {
+      const result = this.state.check.every(item => item);
+      return result;
+    };
 
-        this.handleChangeAll = () => {
-            this.changeAll(!this.lookAll());
-        }
+    this.handleChangeAll = () => {
+      this.changeAll(!this.lookAll());
+    };
 
-        this.changeAll = () => {
-            let newState = [...this.state.check];
-            let result = !this.lookAll();
-            let enPrint = this.enablePrint(result);
-            newState.map((item, index) => newState[index] = result);
-            this.setState({check: newState, enablePrint: result});
-            console.log('changeAll',newState, result);
-        }
+    this.changeAll = () => {
+      const newState = [...this.state.check];
+      const result = !this.lookAll();
+      const enPrint = this.enablePrint(result);
+      newState.map((item, index) => newState[index] = result);
+      this.setState({ check: newState, enablePrint: result });
+      console.log('changeAll', newState, result);
+    };
         
         //inicializa array de checkbox com false
         this.populate = () => this.items.map((item, index) => {

@@ -1,56 +1,42 @@
-import React, { Component, ClientRect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
-import { prop, ifProp, switchProp } from 'styled-tools';
+import styled from 'styled-components';
+import { ifProp } from 'styled-tools';
 
-import * as m from '../../styles/mixins';
 import * as a from './popover.styles';
 
 
 const StyledPopover = styled.div`
-	position: relative;
-	overflow: visible;
-	cursor: pointer;
-	.spanElem {
-		position: relative;
-	}
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
+  .spanElem {
+    position: relative;
+  }
+  > button {
+    background: none;
+    border: none;
+  }
 `;
-
+/* eslint-disable */
 const PopContainer = styled.div`
-	position: absolute;
-	display: ${ifProp('inactive', 'none', 'flex')};
-	justify-content: center;
-	align-items: center;
-	z-index: 9999;
-	width: 288px;
-	min-height: 86px;
-	padding: 20px;
-	box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.1);
-  	border: solid 1px #f5f5f5;
-	background: #FFFFFF;
-	color: #222;
-	&:after, &:before {
-		${a.arrowDefaults}
-	}
-	
-	${switchProp('placement', {
-    bottom: css`top: calc(100% + 15px);left: 50%;
-			margin-left: -144px;
-			${a.arrowBottom}`,
-    top: css`bottom: calc(100% + 10px);left: 0; 
-			margin-left: calc(-1 * ${prop('position.xMar')});
-			${a.arrowTop}`,
-    left: css`top: -15px; right: calc(100% + 10px);
-			${a.arrowLeft}
-    `,
-    right: css`top: -15px; left: calc(100% + 10px);
-			${a.arrowRight}
-    `,
-
-  })}
-
-  `;
+position: absolute;
+display: ${ifProp('inactive', 'none', 'flex')};
+justify-content: center;
+align-items: center;
+z-index: 9999;
+width: 288px;
+min-height: 86px;
+padding: 20px;
+box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.1);
+border: solid 1px #f5f5f5;
+background: #FFFFFF;
+color: #222;
+&:after, &:before {
+${a.arrowDefaults}
+}
+`;
+/* eslint-enable */
 
 const PopContent = props => (
   <div>{props.children}</div>
@@ -60,6 +46,7 @@ class Popover extends Component {
   constructor(props) {
     super(props);
     this.handleOutsideClick = this.handleOutsideClick.bind(this);
+    this.toggle = this.toggle.bind(this);
     this.state = {
       inactive: true,
       xPos: 0,
@@ -81,74 +68,49 @@ class Popover extends Component {
     });
   }
 
-  handleOutsideClick(e) {
+  handleOutsideClick() {
     this.toggle();
-  }
-
-  componentDidMount() {
-    const divParent = ReactDOM.findDOMNode(this.refs.popover).getBoundingClientRect();
-
-    let xm,
-      ym,
-      xp,
-      yp = 0;
-    if (divParent.width < 288) {
-      xm = divParent.width / 2;
-      xp = 0;
-    } else {
-      xm = 288 / 2;
-      xp = divParent.width / 2;
-    }
-
-
-    if (divParent.height < 86) {
-      ym = divParent.height / 2;
-      yp = 0;
-    } else {
-      ym = 86 / 2;
-      yp = divParent.width / 2;
-    }
-    this.setState({
-      xPos: `${xp}px`, yPos: `${yp}px`, xMar: `${xm}px`, yMar: `${ym}px`,
-    });
   }
 
   render() {
     const p = this.props;
 
-      	return (
-        <StyledPopover overlay={PopContent} >
-          <span ref="popover" className="spanElem" onClick={this.toggle.bind(this)}>
-            {p.children[0]}
-
-            <PopContainer
-              inactive={this.state.inactive}
-              placement={p.placement}
-              position={{
-						xPos: this.state.xPos,
-						yPos: this.state.yPos,
-						xMar: this.state.xMar,
-						yMar: this.state.yMar,
-				}}
-            > {p.children[1]}
-            </PopContainer>
-
-          </span>
-
-
-        </StyledPopover>
-      	);
+    return (
+      <StyledPopover {...p} overlay={PopContent} >
+        <button className="spanElem" onClick={this.toggle}>
+          {p.children[0]}
+          <PopContainer
+            inactive={this.state.inactive}
+            placement={p.placement}
+            position={{
+              xPos: this.state.xPos,
+              yPos: this.state.yPos,
+              xMar: this.state.xMar,
+              yMar: this.state.yMar,
+            }}
+          > {p.children[1]}
+          </PopContainer>
+        </button>
+      </StyledPopover>
+    );
   }
 }
+PopContent.propTypes = {
+  children: PropTypes.string,
+};
+
+PopContent.defaultProps = {
+  children: '',
+};
 
 Popover.propTypes = {
-  placement: PropTypes.oneOf(['bottom', 'top', 'left', 'right']).isRequired,
   inactive: PropTypes.bool,
+  children: PropTypes.string,
 };
 
 Popover.defaultProps = {
-  placement: 'bottom',
   inactive: true,
+  children: '',
 };
 
 export { Popover, PopContent };

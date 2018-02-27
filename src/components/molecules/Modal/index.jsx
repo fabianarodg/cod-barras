@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled, { css, extend } from 'styled-components';
-import { prop, ifProp, switchProp } from 'styled-tools';
+import styled from 'styled-components';
 import CloseIcon from 'mdi-react/CloseIcon';
-import Burger from './../../atoms/Burger';
-import FormInput from '../Form/form.input';
 
 
 const Outerstyle = styled.div`
@@ -60,6 +57,7 @@ const Overlay = styled.div`
 class Modal extends Component {
   constructor(props) {
     super(props);
+    this.handleClick = this.handleClick.bind(this);
     this.state = {
       isModalOpen: false,
     };
@@ -76,9 +74,9 @@ class Modal extends Component {
       <Outerstyle
         className={this.state.isModalOpen ? 'is-open' : null}
       >
-        <Overlay onClick={this.handleClick.bind(this)} />
+        <Overlay onClick={this.handleClick} />
         <StyledModal>
-          <CloseButton onClick={this.handleClick.bind(this)} />
+          <CloseButton onClick={this.handleClick} />
           {p.children}
         </StyledModal>
       </Outerstyle>);
