@@ -7,26 +7,40 @@ import { maskCPF } from '../utils/masks';
 import { ListaConta } from '../components/organisms/ListaConta';
 import { HeaderListaConta } from '../components/organisms/HeaderListaConta';
 
-// import { incrementIfOdd } from '../actions';
-
 class ListaDeConta extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      checked: [false, false],
       enablePrint: false,
-      check: [false, true],
     };
+
     this.faturas = this.props.faturas.fechada;
   }
 
-  lookAll = () => false;
   lookAll = () => {
-    const result = this.state.check.every(item => item);
+    console.log(this.state.checked);
+    const result = this.state.checked.every(item => item);
+    console.log(result);
     return result;
   };
-  handleChangeAll = () => {
-    this.changeAll(!this.lookAll());
+
+  handleChecked = (checkedList) => {
+    this.setState({ checked: checkedList });
+    console.log('fora', this.state.checked);
+  }
+
+  changeAll = () => {
+    const newState = [...this.state.check];
+    const result = !this.lookAll();
+    newState.map((item, index) => {
+      newState[index] = result;
+      return newState[index];
+    });
+    this.setState({ check: newState, enablePrint: result });
+    console.log('changeAll', newState, result);
   };
+
 
   render() {
     return (
@@ -41,6 +55,7 @@ class ListaDeConta extends Component {
                 <span>
                   {/* eslint-disable */}
                   Você possui <strong>2 contas vencidas</strong> e <strong>2 contas a vencer</strong>.
+                  
                   {/* eslint-enable */}
                 </span>
               </Alert>
@@ -48,13 +63,13 @@ class ListaDeConta extends Component {
           </header>
 
           <HeaderListaConta
-            onChange={this.handleChangeAll}
+            onChange={() => this.lookAll()}
             onPrint={() => window.print()}
             checked={this.lookAll()}
             enablePrint={this.state.enablePrint}
           />
           <ListaConta
-            ref={(ref) => { this.ListaConta = ref; }}
+            onChange={this.handleChecked}
             key={Math.random()}
             faturas={this.faturas}
           />

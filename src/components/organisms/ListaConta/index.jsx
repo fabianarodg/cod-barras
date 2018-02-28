@@ -12,15 +12,17 @@ class ListaConta extends Component {
     super(props);
     this.state = {
       isOpened: 0,
-      checked: [false, true],
+      checked: [],
     };
   }
 
-  getChecked = () => this.state.checked;
-
-  populate = () => {
-    console.log(this.state.checked.length);
+  handleCkd = (index) => {
+    this.state.checked[index] = !this.state.checked[index];
+    this.props.onChange(this.state.checked);
+    console.log(this.state.checked);
   }
+
+  populate = contas => contas.map(() => (this.state.checked.push(false)))
 
   showBarCode = (index) => {
     let numOpen;
@@ -31,19 +33,20 @@ class ListaConta extends Component {
   contas = (listaContas) => {
     const lista = listaContas;
     let temLista;
+    this.populate(lista);
+
     if (lista.length > 0) {
       temLista = lista.map((fatura, index) => (
         <Grid key={Math.random()}>
-          {/* <Row margin="1rem 0">
-            <Alert danger muted>
-              <span>
-              Esse serviço está bloqueado por falta de pagamento. Para religar<br />
-              o serviço é necessário pagar pelo menos a conta mais antiga.
-              </span>
-            </Alert>
-          </Row> */}
           <Row padding="1rem 0">
-            <Col grow={0} align="flex-start" padding=".2rem .8rem 0 0"><Check /></Col>
+            <Col grow={0} align="flex-start" padding=".2rem .8rem 0 0">
+              <Check
+                onChange={() => this.handleCkd(index)}
+                name="conta"
+                checked={this.state.checked[index]}
+              />
+              {this.state.checked[index]}
+            </Col>
             <Col>
               <Row>
                 <Col justify="center"><Title>{formatCurrencyToBr(fatura.valor)}</Title></Col>
@@ -55,7 +58,7 @@ class ListaConta extends Component {
               </Row>
             </Col>
           </Row>
-          <div className="fab" style={{ display: this.state.isOpened === index + 1 ? 'block' : 'none' }}>
+          <div style={{ display: this.state.isOpened === index + 1 ? 'block' : 'none' }}>
             <Col align="center">
               <Barcode
                 value={fatura.codigoDeBarras}
@@ -90,18 +93,25 @@ class ListaConta extends Component {
 
   terminal = (numTel) => {
     const tel = numTel;
-    return tel.map(item => (
-      <article>
-        <Grid background="#f5f5f5">
-          <Row padding="1rem 0">
-            <Col>
-              <Muted><small>Número do produto</small></Muted>
-              <Title>{maskTel(item.terminal)}</Title>
-            </Col>
-          </Row>
-        </Grid>
-        {item.faturas ? this.contas(item.faturas) : null}
-      </article>));
+    const term = tel.map((item) => {
+      let lis;
+      if (item.faturas.length > 0) {
+        lis = (<article>
+          <Grid background="#f5f5f5">
+            <Row padding="1rem 0">
+              <Col>
+                <Muted><small>Número do produto</small></Muted>
+                <Title>{maskTel(item.terminal)}</Title>
+              </Col>
+            </Row>
+          </Grid>
+          {this.contas(item.faturas)}
+        </article>);
+      }
+      return lis;
+    });
+
+    return term;
   }
 
   render() {
@@ -115,10 +125,14 @@ class ListaConta extends Component {
 
 ListaConta.propTypes = {
   faturas: PropTypes.objectOf(PropTypes.any).isRequired,
+  onChange: PropTypes.func,
 };
 
 ListaConta.defaultProps = {
   faturas: {},
+  onChange: function getList(param) {
+    return param;
+  },
 };
 
 export { ListaConta };

@@ -53,6 +53,7 @@ class ListaComHeader extends Component {
     this.changeAll = () => {
       const newState = [...this.state.check];
       const result = !this.lookAll();
+      console.log('lookAll', result);
       const enPrint = this.enablePrint(result);
       newState.map((item, index) => newState[index] = result);
       this.setState({ check: newState, enablePrint: result });
